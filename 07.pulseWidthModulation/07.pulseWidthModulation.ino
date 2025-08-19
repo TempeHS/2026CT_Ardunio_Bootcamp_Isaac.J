@@ -21,12 +21,65 @@
     https://github.com/TempeHS/TempeHS_Ardunio_Bootcamp/blob/main/07.pulseWidthModulation/Bootcamp-PWMOutput.png
 */
 
+static unsigned int redLED = 6;
+static unsigned int onboardLED = 13;
+static unsigned int buttonPIN = 4;
+static unsigned int potPIN = A1;
 
+//Debounce paramaters
+unsigned long lastDebounceTime = 0;
+unsigned long debounceDelay = 100; // milliseconds
+int lastButtonState = LOW;
+int buttonState = LOW;
+bool onSTATE = false;
 
 void setup() {
-  
+  Serial.begin(9600);
+  Serial.print("Serial Monitor Configured for 9600");
+  Serial.println("--------------");
+  pinMode(redLED, OUTPUT);
+  pinMode(onboardLED, OUTPUT);
+  pinMode(buttonPIN, INPUT);
 }
 
 void loop() {
-  
+  int reading = digitalRead(buttonPIN);
+
+  // Check if button changed
+  if (reading != lastButtonState) {
+    lastDebounceTime = millis ();
+  }
+
+  // If enough time had passed (debounce)
+  if ((millis() - lastDebounceTime) > debounceDelay) {
+    // If button state changed, update dobounced state
+    if (reading != buttonState) {
+      buttonState = reading;
+
+      // Only toggle on a HIGH transition (button press)
+      if (buttonState == HIGH) {
+        onSTATE = !onSTATE;
+      }
+    }
+  }
+
+  if (reading == true) {
+   onSTATE = !onSTATE;
+ }
+
+ lastButtonState = reading;// save for next loop
+
+unsigned int dimmer = analogRead(potPIN);
+Serial.println(dimmer);
+dimmer = map(dimmer, 0 , 255, 0, 1023);
+
+if (onSTATE) {
+  analogWrite(onboardLED, dimmer);
+  analogWrite(redLED, dimmer);
+} else {
+  analogWrite(onboardLED, false);
+  analogWrite(redLED,false);
+}
+ 
+ delay(10); // Small delay for stability
 }
