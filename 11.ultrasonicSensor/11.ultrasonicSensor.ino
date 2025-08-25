@@ -1,4 +1,4 @@
-/*
+ /*
   Author: 
   
   Learning Intention:
@@ -25,11 +25,17 @@
 
 #include "Ultrasonic.h"
 
+Ultrasonic myUltraSonicSensor(5);
 void setup()
 {
-  
+  Serial.begin(9600);
 }
 void loop()
 {
-  
+  unsigned long RangeInCentimeters;
+
+  RangeInCentimeters = myUltraSonicSensor.distanceRead(); // two measurements 
+  Serial.print("RangeInCentimetres");//0~400cm
+  Serial.println(" cm");
+  delay(250);
 }
