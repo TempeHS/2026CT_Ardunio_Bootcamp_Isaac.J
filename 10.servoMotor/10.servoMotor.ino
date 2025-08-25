@@ -24,10 +24,19 @@
 
 #include <Servo.h>
 
+Servo myservo; // create servo object to control a servo
+unsigned static int servoPin = 6;
+
+int potpin = A1; // analog pin used to connect the potentiometer
+int val;    // variable to read the value from the analog pin
+
 void setup() {
-  
+  myservo.attach(servoPin); // attached  the servo on pin 9 to the servo object
 }
 
 void loop() {
-  
+  val = analogRead (potpin);          // readthe value of the potentiometer
+  val = map(val, 0, 1023, 0, 180);    // scale it to use it with the servo
+  myservo.write(val);                 // sets the servo position according to
+  delay(15);                          // waits for the servo to get there
 }
