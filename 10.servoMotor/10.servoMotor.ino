@@ -57,7 +57,22 @@ void setup() {
   delay(3000);
 }
 
-void loop() { 
+void loop() {
+
+  static String inputString = "";
+  static bool stringComplete = false;
+
+  // Read serial data and build up a string until newline
+  while (Serial.available()) {
+    char inChar = (char)Serial.read();
+    if (inChar == '\n') {
+      stringComplete = true;
+      break;
+    } else if (inChar != '\r') {
+      inputString += inChar;
+    }
+  }
+
    unsigned long RangeInCentimeters;
   RangeInCentimeters = us_sensor.distanceRead(); // two measurements
   RangeInCentimeters = map(RangeInCentimeters, 0, 357, 0, 180);
