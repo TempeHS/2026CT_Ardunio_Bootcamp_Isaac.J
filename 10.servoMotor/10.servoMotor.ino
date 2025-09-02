@@ -52,24 +52,24 @@ void setup() {
 
   u8g2.begin();
   u8g2.setFont(u8g2_font_6x12_tf);
-  u8g2.drawStr(0, 10, "TEST");
+  u8g2.drawStr(0, 10, "Goon");
   u8g2.nextPage();
   delay(3000);
 }
 
 void loop() {
 
-  static String inputString = "";
+  static String inputString = "10 cm";
   static bool stringComplete = false;
 
-  // Read serial data and build up a string until newline
-  while (Serial.available()) {
-    char inChar = (char)Serial.read();
-    if (inChar == '\n') {
-      stringComplete = true;
-      break;
-    } else if (inChar != '\r') {
-      inputString += inChar;
+  // Remove \r and \n from the input string
+  for (unsigned int i =0; i < inputString.length(); i++) {
+    char inChar = inputString[i];
+    if (inChar != '\n' && inChar != '\r') {
+      cleanString += inChar;
+    }
+    if(inChar == '\n'){
+      cleanString += '_';
     }
   }
 
